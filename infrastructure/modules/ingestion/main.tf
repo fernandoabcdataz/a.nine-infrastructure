@@ -1,4 +1,6 @@
 resource "google_bigquery_dataset" "ingestion_dataset" {
+  count = var.create_if_not_exists ? 1 : 0
+
   dataset_id                  = "${var.client_name}_ingestion"
   friendly_name               = "${var.client_name} Ingestion Dataset"
   description                 = "Dataset for ingested data"
@@ -32,5 +34,6 @@ module "xero" {
 }
 
 output "ingestion_dataset_id" {
-  value = google_bigquery_dataset.ingestion_dataset.dataset_id
+  value = length(google_bigquery_dataset.ingestion_dataset) > 0 ? google_bigquery_dataset.ingestion_dataset[0].dataset_id : null
+  description = "the ID of the ingestion dataset, if it was created"
 }

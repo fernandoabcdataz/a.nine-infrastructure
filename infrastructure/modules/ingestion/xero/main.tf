@@ -1,4 +1,6 @@
 resource "google_storage_bucket" "xero_data_bucket" {
+  count = var.create_if_not_exists ? 1 : 0
+
   name          = "${var.project}-${var.client_name}-xero-data"
   location      = var.region
   force_destroy = true

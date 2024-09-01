@@ -31,12 +31,6 @@ variable "project_owner_email" {
   type        = string
 }
 
-variable "data_ingestion_sa" {
-  description = "email of the data ingestion service account"
-  type        = string
-  default     = "data-ingestion-sa@${var.project}.iam.gserviceaccount.com"
-}
-
 variable "environment" {
   description = "environment (e.g., 'dev', 'prod')"
   type        = string

@@ -30,3 +30,8 @@ variable "project_owner_email" {
   description = "email of the project owner"
   type        = string
 }
+
+variable "create_if_not_exists" {
+  type    = bool
+  default = false
+}
