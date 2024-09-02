@@ -7,11 +7,18 @@ provider "google" {
 module "ingestion" {
   source = "./modules/ingestion"
   
-  create_if_not_exists  = false
-  project               = var.project
-  region                = var.region
-  client_name           = var.client_name
-  xero_client_id        = var.xero_client_id
-  xero_client_secret    = var.xero_client_secret
-  project_owner_email   = var.project_owner_email
+  project             = var.project
+  region              = var.region
+  client_name         = var.client_name
+  project_owner_email = var.project_owner_email
+}
+
+module "xero" {
+  source = "./modules/ingestion/xero"
+  
+  project            = var.project
+  region             = var.region
+  client_name        = var.client_name
+  xero_client_id     = var.xero_client_id
+  xero_client_secret = var.xero_client_secret
 }

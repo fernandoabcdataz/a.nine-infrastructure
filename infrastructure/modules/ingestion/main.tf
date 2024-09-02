@@ -1,6 +1,4 @@
 resource "google_bigquery_dataset" "ingestion_dataset" {
-  count = var.create_if_not_exists ? 1 : 0
-
   dataset_id                  = "${var.client_name}_ingestion"
   friendly_name               = "${var.client_name} Ingestion Dataset"
   description                 = "Dataset for ingested data"
@@ -22,18 +20,7 @@ resource "google_bigquery_dataset" "ingestion_dataset" {
   }
 }
 
-module "xero" {
-  source = "./xero"
-
-  project             = var.project
-  region              = var.region
-  client_name         = var.client_name
-  xero_client_id      = var.xero_client_id
-  xero_client_secret  = var.xero_client_secret
-  project_owner_email = var.project_owner_email
-}
-
 output "ingestion_dataset_id" {
-  value = length(google_bigquery_dataset.ingestion_dataset) > 0 ? google_bigquery_dataset.ingestion_dataset[0].dataset_id : null
-  description = "the ID of the ingestion dataset, if it was created"
+  value       = google_bigquery_dataset.ingestion_dataset.dataset_id
+  description = "the ID of the ingestion dataset"
 }

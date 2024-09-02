@@ -13,22 +13,7 @@ variable "client_name" {
   type        = string
 }
 
-variable "xero_client_id" {
-  description = "Client ID for Xero API integration"
-  type        = string
-}
-
-variable "xero_client_secret" {
-  description = "Client Secret for Xero API integration"
-  type        = string
-}
-
 variable "project_owner_email" {
   description = "email address of the project owner"
   type        = string
-}
-
-variable "create_if_not_exists" {
-  type    = bool
-  default = false
 }
