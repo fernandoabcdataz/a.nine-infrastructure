@@ -91,6 +91,7 @@ resource "google_cloud_scheduler_job" "xero_hourly_job" {
 
     oidc_token {
       service_account_email = "data-ingestion-sa@${var.project}.iam.gserviceaccount.com"
+      audience              = google_cloud_run_service.xero_service.status[0].url
     }
   }
 }
