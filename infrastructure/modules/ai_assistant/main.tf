@@ -84,6 +84,12 @@ resource "google_secret_manager_secret" "anthropic_api_key" {
   }
 }
 
+data "google_storage_bucket_object" "function_zip" {
+  name   = "function-source.zip"
+  bucket = google_storage_bucket.ai_assistant_knowledge_base.name
+  depends_on = [null_resource.create_dummy_zip]
+}
+
 # create a Cloud Function to run the script
 resource "google_cloudfunctions_function" "upload_knowledge_base" {
   name        = "upload-knowledge-base"
@@ -92,7 +98,7 @@ resource "google_cloudfunctions_function" "upload_knowledge_base" {
 
   available_memory_mb   = 256
   source_archive_bucket = google_storage_bucket.ai_assistant_knowledge_base.name
-  source_archive_object = google_storage_bucket_object.function_zip.name
+  source_archive_object = data.google_storage_bucket_object.function_zip.name
   entry_point           = "upload_knowledge_base"
   timeout               = 540
   max_instances         = 10
@@ -107,12 +113,18 @@ resource "google_cloudfunctions_function" "upload_knowledge_base" {
     BIGQUERY_DATASET     = google_bigquery_dataset.knowledge_base_dataset.dataset_id
     BIGQUERY_TABLE       = google_bigquery_table.knowledge_base_embeddings.table_id
   }
-
-  service_account_email = google_service_account.knowledge_base_uploader.email
-
   secret_environment_variables {
     key     = "ANTHROPIC_API_KEY"
     secret  = google_secret_manager_secret.anthropic_api_key.secret_id
     version = "latest"
+  }
+}
+
+resource "null_resource" "create_dummy_zip" {
+  provisioner "local-exec" {
+    command = <<EOT
+      gsutil cp gs://${google_storage_bucket.ai_assistant_knowledge_base.name}/function-source.zip function-source.zip || touch function-source.zip
+      gsutil cp function-source.zip gs://${google_storage_bucket.ai_assistant_knowledge_base.name}/function-source.zip
+    EOT
   }
 }
