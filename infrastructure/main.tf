@@ -4,14 +4,6 @@ provider "google" {
   credentials = file("../service-account.json")
 }
 
-module "ai_assistant" {
-  source = "./modules/ai_assistant"
-  
-  project             = var.project
-  region              = var.region
-  project_owner_email = var.project_owner_email
-}
-
 module "ingestion" {
   source = "./modules/ingestion"
   
