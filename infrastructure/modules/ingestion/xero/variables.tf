@@ -4,7 +4,7 @@ variable "project" {
 }
 
 variable "region" {
-  description = "Google Cloud Region"
+  description = "Google Cloud region where resources will be created"
   type        = string
 }
 

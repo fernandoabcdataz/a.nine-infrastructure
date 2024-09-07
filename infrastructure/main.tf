@@ -22,3 +22,11 @@ module "xero" {
   xero_client_id     = var.xero_client_id
   xero_client_secret = var.xero_client_secret
 }
+
+module "knowledge_base" {
+  source = "./modules/knowledge_base"
+  
+  project             = var.project
+  region              = var.region
+  openai_api_key      = var.openai_api_key
+}
