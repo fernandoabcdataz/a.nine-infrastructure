@@ -20,6 +20,12 @@ variable "xero_client_id" {
   sensitive   = true
 }
 
+variable "openai_api_key" {
+  description = "OpenAI API Key"
+  type        = string
+  sensitive   = true
+}
+
 variable "xero_client_secret" {
   description = "Client Secret for Xero API integration"
   type        = string
