@@ -10,34 +10,6 @@ resource "google_bigquery_dataset" "knowledge_base" {
   location   = var.region
 }
 
-/*
-# BigQuery table
-resource "google_bigquery_table" "semantic_model_vector" {
-  dataset_id = google_bigquery_dataset.knowledge_base.dataset_id
-  table_id   = "semantic_model_vector"
-
-  schema = jsonencode([
-    {
-      name = "entity",
-      type = "STRING"
-    },
-    {
-      name = "chunk_id",
-      type = "STRING"
-    },
-    {
-      name = "text_chunk",
-      type = "STRING"
-    },
-    {
-      name = "embedding",
-      type = "FLOAT64",
-      mode = "REPEATED"
-    }
-  ])
-}
-*/
-
 # Secret Manager
 resource "google_secret_manager_secret" "openai_api_key" {
   secret_id = "openai_api_key"
@@ -69,10 +41,6 @@ resource "google_cloud_run_service" "knowledge_base_processor" {
           name  = "BIGQUERY_DATASET"
           value = google_bigquery_dataset.knowledge_base.dataset_id
         }
-        # env {
-        #   name  = "BIGQUERY_TABLE"
-        #   value = google_bigquery_table.semantic_model_vector.table_id
-        # }
         env {
           name  = "STORAGE_BUCKET"
           value = google_storage_bucket.knowledge_base.name
