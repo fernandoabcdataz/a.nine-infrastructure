@@ -40,11 +40,7 @@ resource "google_secret_manager_secret" "openai_api_key" {
   secret_id = "openai_api_key"
 
   replication {
-    user_managed {
-      replicas {
-        location = var.region
-      }
-    }
+    auto {}
   }
 }
 

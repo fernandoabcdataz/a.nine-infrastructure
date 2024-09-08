@@ -6,6 +6,11 @@ variable "project" {
 variable "region" {
   description = "Google Cloud region where resources will be created"
   type        = string
+}
+
+variable "region2" {
+  description = "Google Cloud region where secret manager will be created"
+  type        = string
   default     = "australia-southeast1"
 }
 

@@ -41,7 +41,7 @@ data "google_project" "current" {}
 # cloud run service
 resource "google_cloud_run_service" "xero_service" {
   name     = "${var.project}-${var.client_name}-cloud-run-xero"
-  location = var.region
+  location = var.region2
 
   template {
     spec {
