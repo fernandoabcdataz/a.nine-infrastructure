@@ -9,7 +9,7 @@ variable "region" {
 }
 
 variable "region2" {
-  description = "Google Cloud region where secret manager will be created"
+  description = "Google Cloud region where cloud run will be created"
   type        = string
   default     = "australia-southeast1"
 }

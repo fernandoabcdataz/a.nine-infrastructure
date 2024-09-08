@@ -18,6 +18,7 @@ module "xero" {
   
   project            = var.project
   region             = var.region
+  region2             = var.region2
   client_name        = var.client_name
   xero_client_id     = var.xero_client_id
   xero_client_secret = var.xero_client_secret
@@ -28,5 +29,6 @@ module "knowledge_base" {
   
   project             = var.project
   region              = var.region
+  region2              = var.region2
   openai_api_key      = var.openai_api_key
 }

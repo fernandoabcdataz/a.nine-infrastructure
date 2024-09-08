@@ -1,3 +1,8 @@
+resource "google_service_account" "cloud_run_sa" {
+  account_id   = "${var.client_name}-cloud-run-sa"
+  display_name = "${var.client_name} Cloud Run Service Account"
+}
+
 resource "google_storage_bucket" "xero_data_bucket" {
   name          = "${var.project}-${var.client_name}-xero-data"
   location      = var.region
@@ -59,7 +64,7 @@ resource "google_cloud_run_service" "xero_service" {
           value = var.project
         }
       }
-      service_account_name = "data-ingestion-sa@${var.project}.iam.gserviceaccount.com"
+      # service_account_name = google_service_account.cloud_run_sa.email
     }
   }
 
@@ -69,13 +74,15 @@ resource "google_cloud_run_service" "xero_service" {
   }
 }
 
+/*
 # iam entry for the service account to invoke the cloud run service
 resource "google_cloud_run_service_iam_member" "run_invoker" {
   service  = google_cloud_run_service.xero_service.name
   location = google_cloud_run_service.xero_service.location
   role     = "roles/run.invoker"
-  member   = "serviceAccount:data-ingestion-sa@${var.project}.iam.gserviceaccount.com"
+  member   = "serviceAccount:${google_service_account.cloud_run_sa.email}"
 }
+*/
 
 # cloud scheduler job
 resource "google_cloud_scheduler_job" "xero_hourly_job" {
@@ -90,7 +97,8 @@ resource "google_cloud_scheduler_job" "xero_hourly_job" {
     uri         = google_cloud_run_service.xero_service.status[0].url
 
     oidc_token {
-      service_account_email = "data-ingestion-sa@${var.project}.iam.gserviceaccount.com"
+      service_account_email = "developer-sa@${var.project}.iam.gserviceaccount.com"
+      # service_account_email = google_service_account.cloud_run_sa.email
       audience              = google_cloud_run_service.xero_service.status[0].url
     }
   }

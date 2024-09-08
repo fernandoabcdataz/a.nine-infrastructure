@@ -4,12 +4,14 @@ resource "google_storage_bucket" "knowledge_base" {
   location = var.region
 }
 
-# BigQuery Dataset and Table
+# BigQuery dataset
 resource "google_bigquery_dataset" "knowledge_base" {
   dataset_id = "knowledge_base"
   location   = var.region
 }
 
+/*
+# BigQuery table
 resource "google_bigquery_table" "semantic_model_vector" {
   dataset_id = google_bigquery_dataset.knowledge_base.dataset_id
   table_id   = "semantic_model_vector"
@@ -34,6 +36,7 @@ resource "google_bigquery_table" "semantic_model_vector" {
     }
   ])
 }
+*/
 
 # Secret Manager
 resource "google_secret_manager_secret" "openai_api_key" {
@@ -52,7 +55,7 @@ resource "google_secret_manager_secret_version" "openai_api_key" {
 # Cloud Run Service
 resource "google_cloud_run_service" "knowledge_base_processor" {
   name     = "knowledge-base-processor"
-  location = var.region
+  location = var.region2
 
   template {
     spec {
@@ -66,16 +69,16 @@ resource "google_cloud_run_service" "knowledge_base_processor" {
           name  = "BIGQUERY_DATASET"
           value = google_bigquery_dataset.knowledge_base.dataset_id
         }
-        env {
-          name  = "BIGQUERY_TABLE"
-          value = google_bigquery_table.semantic_model_vector.table_id
-        }
+        # env {
+        #   name  = "BIGQUERY_TABLE"
+        #   value = google_bigquery_table.semantic_model_vector.table_id
+        # }
         env {
           name  = "STORAGE_BUCKET"
           value = google_storage_bucket.knowledge_base.name
         }
       }
-      service_account_name = "knowledge-base-sa@${var.project}.iam.gserviceaccount.com"
+      service_account_name = "developer-sa@${var.project}.iam.gserviceaccount.com"
     }
   }
 
@@ -122,8 +125,5 @@ resource "google_cloud_run_service_iam_member" "pubsub_invoker" {
   service  = google_cloud_run_service.knowledge_base_processor.name
   location = google_cloud_run_service.knowledge_base_processor.location
   role     = "roles/run.invoker"
-  member   = "serviceAccount:knowledge-base-sa@${var.project}.iam.gserviceaccount.com"
-}
-
-data "google_project" "project" {
+  member   = "serviceAccount:developer-sa@${var.project}.iam.gserviceaccount.com"
 }
