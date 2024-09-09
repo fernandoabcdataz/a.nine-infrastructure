@@ -8,16 +8,6 @@ resource "google_bigquery_dataset" "ingestion_dataset" {
   labels = {
     environment = "production"
   }
-
-  access {
-    role          = "OWNER"
-    user_by_email = var.project_owner_email
-  }
-
-  access {
-    role           = "WRITER"
-    user_by_email  = "data-ingestion-sa@${var.project}.iam.gserviceaccount.com"
-  }
 }
 
 output "ingestion_dataset_id" {
