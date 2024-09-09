@@ -32,3 +32,12 @@ module "knowledge_base" {
   region2              = var.region2
   openai_api_key      = var.openai_api_key
 }
+
+module "transformation" {
+  source = "./modules/transformation"
+  
+  project            = var.project
+  region             = var.region
+  region2             = var.region2
+  client_name        = var.client_name
+}

@@ -43,7 +43,7 @@ resource "google_project_iam_member" "cloud_run_image_puller" {
 
 data "google_project" "current" {}
 
-# cloud run service
+# Cloud Run Service
 resource "google_cloud_run_service" "xero_service" {
   name     = "${var.project}-${var.client_name}-cloud-run-xero"
   location = var.region2
@@ -60,6 +60,7 @@ resource "google_cloud_run_service" "xero_service" {
           value = var.client_name
         }
         env {
+          # name  = "GCP_PROJECT"
           name  = "GOOGLE_CLOUD_PROJECT"
           value = var.project
         }
