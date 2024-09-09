@@ -64,7 +64,7 @@ resource "google_cloud_run_service" "xero_service" {
           value = var.project
         }
       }
-      # service_account_name = google_service_account.cloud_run_sa.email
+      service_account_name = "developer-sa@${var.project}.iam.gserviceaccount.com"
     }
   }
 
@@ -89,12 +89,12 @@ resource "google_cloud_scheduler_job" "xero_hourly_job" {
   name             = "${var.project}-${var.client_name}-scheduler-xero-hourly"
   description      = "Triggers Xero data ingestion hourly"
   schedule         = "0 * * * *"
-  time_zone        = "UTC"
+  time_zone        = "Australia/Sydney"
   attempt_deadline = "320s"
 
   http_target {
     http_method = "POST"
-    uri         = google_cloud_run_service.xero_service.status[0].url
+    uri         = "${google_cloud_run_service.xero_service.status[0].url}/run"
 
     oidc_token {
       service_account_email = "developer-sa@${var.project}.iam.gserviceaccount.com"
