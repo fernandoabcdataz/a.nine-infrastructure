@@ -1,49 +1,32 @@
 variable "project" {
-  description = "Google Cloud Project ID"
+  description = "GCP Project ID."
   type        = string
 }
 
 variable "region" {
-  description = "Google Cloud region where resources will be created"
+  description = "GCP region for resources."
   type        = string
 }
 
-variable "region2" {
-  description = "Google Cloud region where cloud run will be created"
-  type        = string
-  default     = "australia-southeast1"
+variable "clients" {
+  description = "Map of clients to provision resources for."
+  type = map(object({
+    # Define any client-specific attributes if needed
+    # For simplicity, using empty objects here
+  }))
 }
 
-variable "client_name" {
-  description = "name of the client, used for naming resources"
-  type        = string
-}
-
-variable "xero_client_id" {
-  description = "Client ID for Xero API integration"
-  type        = string
-  sensitive   = true
-}
-
-variable "openai_api_key" {
-  description = "OpenAI API Key"
-  type        = string
-  sensitive   = true
-}
-
-variable "xero_client_secret" {
-  description = "Client Secret for Xero API integration"
-  type        = string
-  sensitive   = true
-}
-
-variable "project_owner_email" {
-  description = "email address of the project owner"
+variable "ingestion_image" {
+  description = "Docker image for ingestion services."
   type        = string
 }
 
-variable "environment" {
-  description = "environment (e.g., 'dev', 'prod')"
+variable "transformation_image" {
+  description = "Docker image for transformation services."
   type        = string
-  default     = "dev"
+}
+
+variable "assistant_image" {
+  description = "Docker image for assistant service."
+  type        = string
 }
