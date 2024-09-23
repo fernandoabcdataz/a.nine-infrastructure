@@ -17,3 +17,9 @@ variable "master_service_account" {
   description = "Master service account email."
   type        = string
 }
+
+variable "container_concurrency" {
+  description = "Number of concurrent requests per container instance."
+  type        = number
+  default     = 20
+}

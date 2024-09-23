@@ -6,6 +6,9 @@ resource "google_cloud_run_service" "assistant" {
     spec {
       service_account_name = var.master_service_account
 
+      # Correct placement of container_concurrency
+      container_concurrency = var.container_concurrency
+
       containers {
         image = var.assistant_image
         ports {
@@ -23,8 +26,6 @@ resource "google_cloud_run_service" "assistant" {
             cpu    = "2"
           }
         }
-
-        container_concurrency = 20
       }
     }
   }

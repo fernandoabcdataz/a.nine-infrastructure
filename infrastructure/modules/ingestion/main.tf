@@ -1,3 +1,5 @@
+# modules/ingestion/main.tf
+
 resource "google_cloud_run_service" "ingestion" {
   for_each = var.clients
 
@@ -7,6 +9,9 @@ resource "google_cloud_run_service" "ingestion" {
   template {
     spec {
       service_account_name = var.security_module_output[each.key]
+
+      # Correct placement of container_concurrency
+      container_concurrency = var.container_concurrency
 
       containers {
         image = var.ingestion_image
@@ -51,8 +56,6 @@ resource "google_cloud_run_service" "ingestion" {
             cpu    = "1"
           }
         }
-
-        container_concurrency = 10
       }
     }
   }
@@ -64,16 +67,16 @@ resource "google_cloud_run_service" "ingestion" {
 }
 
 resource "google_cloud_run_service_iam_member" "invoker" {
-  for_each = {
-    for client in var.clients : client => {
-      service = google_cloud_run_service.ingestion[client].name
-      role    = "roles/run.invoker"
-      member  = "serviceAccount:service-${data.google_project.current.number}@serverless-robot-prod.iam.gserviceaccount.com"
-    }
-  }
+  for_each = { for client in var.clients : client => {
+    service = google_cloud_run_service.ingestion[client].name
+    role    = "roles/run.invoker"
+    member  = "serviceAccount:service-${data.google_project.current.number}@serverless-robot-prod.iam.gserviceaccount.com"
+  } }
 
   service  = each.value.service
   location = var.location
   role     = each.value.role
   member   = each.value.member
 }
+
+# optional: Add Cloud Scheduler or Pub/Sub triggers here as needed

@@ -22,3 +22,9 @@ variable "security_module_output" {
   description = "Map of client service account emails."
   type        = map(string)
 }
+
+variable "container_concurrency" {
+  description = "Number of concurrent requests per container instance."
+  type        = number
+  default     = 10
+}
